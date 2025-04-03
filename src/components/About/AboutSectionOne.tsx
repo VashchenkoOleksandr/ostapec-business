@@ -24,8 +24,8 @@ const AboutSectionOne = () => {
           <div className="-mx-4 flex flex-wrap items-center">
             <div className="w-full px-4 lg:w-1/2">
               <SectionTitle
-                title="Crafted for Startup, SaaS and Business Sites."
-                paragraph="The main ‘thrust’ is to focus on educating attendees on how to best protect highly vulnerable business applications with interactive panel discussions and roundtables."
+                title="Our Mission"
+                paragraph="Our mission is simple: to deliver innovative, data-driven solutions that transform businesses and create long-lasting success. We believe in the power of technology and marketing to shape the future, and we work tirelessly to bring our clients the best tools, strategies, and insights to stay ahead of the curve."
                 mb="44px"
               />
 

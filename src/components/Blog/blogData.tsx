@@ -5,10 +5,10 @@ const blogData: Blog[] = [
     id: 1,
     title: "Best UI components for modern websites",
     paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      "Discover the most effective and customizable UI components that can help you build stunning, user-friendly websites.",
     image: "/images/blog/blog-01.jpg",
     author: {
-      name: "Samuyl Joshi",
+      name: "Daniel Brooks",
       image: "/images/blog/author-01.png",
       designation: "Graphic Designer",
     },
@@ -19,12 +19,12 @@ const blogData: Blog[] = [
     id: 2,
     title: "9 simple ways to improve your design skills",
     paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      "Learn practical tips and strategies to enhance your design abilities and create visually appealing websites and applications.",
     image: "/images/blog/blog-02.jpg",
     author: {
-      name: "Musharof Chy",
+      name: "Sophia Carter",
       image: "/images/blog/author-02.png",
-      designation: "Content Writer",
+      designation: "Graphic Designer",
     },
     tags: ["computer"],
     publishDate: "2025",
@@ -33,12 +33,12 @@ const blogData: Blog[] = [
     id: 3,
     title: "Tips to quickly improve your coding speed.",
     paragraph:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras sit amet dictum neque, laoreet dolor.",
+      "Boost your productivity as a developer with these quick tips and techniques to write cleaner and more efficient code faster.",
     image: "/images/blog/blog-03.jpg",
     author: {
-      name: "Lethium Deo",
+      name: "John Miller",
       image: "/images/blog/author-03.png",
-      designation: "Graphic Designer",
+      designation: "Web Developer",
     },
     tags: ["design"],
     publishDate: "2025",

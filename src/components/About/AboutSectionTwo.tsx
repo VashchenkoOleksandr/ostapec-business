@@ -31,8 +31,7 @@ const AboutSectionTwo = () => {
                   Bug free code
                 </h3>
                 <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  We follow industry best practices to deliver clean, optimized, and bug-free code. Our rigorous testing process ensures that every line of code is efficient, secure, and ready for seamless performance across all devices and platforms.
                 </p>
               </div>
               <div className="mb-9">
@@ -40,8 +39,7 @@ const AboutSectionTwo = () => {
                   Premier support
                 </h3>
                 <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt.
+                  Your success is our priority. We offer dedicated, round-the-clock support to ensure your website or application runs smoothly. Whether you need troubleshooting, updates, or expert guidance, our team is always here to help.
                 </p>
               </div>
               <div className="mb-1">
@@ -49,8 +47,7 @@ const AboutSectionTwo = () => {
                   Next.js
                 </h3>
                 <p className="text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed">
-                  Lorem ipsum dolor sit amet, sed do eiusmod tempor incididunt
-                  consectetur adipiscing elit setim.
+                  Built for speed, scalability, and SEO, Next.js is our go-to framework for high-performance web applications. With server-side rendering, static site generation, and seamless API integration, we create fast, secure, and dynamic digital experiences.
                 </p>
               </div>
             </div>

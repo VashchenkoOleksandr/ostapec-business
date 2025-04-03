@@ -5,28 +5,28 @@ import SingleTestimonial from "./SingleTestimonial";
 const testimonialData: Testimonial[] = [
   {
     id: 1,
-    name: "Musharof Chy",
-    designation: "Founder @TailGrids",
+    name: "Devid Weilium",
+    designation: "CTO @ Nexora Dynamics",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
+      "Web Services Ltd. exceeded our expectations. Their expertise in web development and SEO gave our brand a new online presence, and the results were beyond what we imagined.",
     image: "/images/testimonials/auth-01.png",
     star: 5,
   },
   {
     id: 2,
-    name: "Devid Weilium",
-    designation: "Founder @UIdeck",
+    name: "Jordan Whitmore",
+    designation: "Marketing Director @ Quantum Apex Solutions",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
+      "The team’s approach to digital marketing is truly next-level. Thanks to their strategic planning, our conversion rates skyrocketed within months.",
     image: "/images/testimonials/auth-02.png",
     star: 5,
   },
   {
     id: 3,
     name: "Lethium Frenci",
-    designation: "Founder @Lineicons",
+    designation: "Co-Founder @ Veltrix Innovations",
     content:
-      "Our members are so impressed. It's intuitive. It's clean. It's distraction free. If you're building a community.",
+      "Reliable, efficient, and forward-thinking. From UX/UI design to backend development, they handled everything seamlessly and delivered on time.",
     image: "/images/testimonials/auth-03.png",
     star: 5,
   },
@@ -37,8 +37,8 @@ const Testimonials = () => {
     <section className="dark:bg-bg-color-dark bg-gray-light relative z-10 py-16 md:py-20 lg:py-28">
       <div className="container">
         <SectionTitle
-          title="What Our Users Says"
-          paragraph="There are many variations of passages of Lorem Ipsum available but the majority have suffered alteration in some form."
+          title="What Our Clients Say"
+          paragraph="Our clients trust us to bring their digital vision to life. From custom websites to advanced marketing solutions, we help businesses grow and succeed with expert guidance and innovative strategies."
           center
         />
 
