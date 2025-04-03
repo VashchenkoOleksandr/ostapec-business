@@ -193,7 +193,7 @@ const BlogDetailsPage = () => {
                     Additional Insights and Recommendations
                   </h3>
                   <p className="mb-10 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    Implementing these strategies will help improve your website's visibility, enhance user experience, and drive long-term business growth.
+                    Implementing these strategies will help improve your website`&apos;`s visibility, enhance user experience, and drive long-term business growth.
                   </p>
                   <ul className="mb-10 list-inside list-disc text-body-color">
                     <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Digital marketplace for UI/UX designers.</li>
