@@ -27,9 +27,6 @@ const Contact = () => {
                                     📍 Address: [Your Address Here]
                                 </li>
                                 <li className="mb-5 text-base font-medium text-body-color">
-                                    📞 Phone: <a href="tel:+15875759003">+1 587 575 9003</a>
-                                </li>
-                                <li className="mb-5 text-base font-medium text-body-color">
                                     ✉️ Email: <a href="mailto:mail@mail.com">mail@mail.com</a>
                                 </li>
                             </ul>
