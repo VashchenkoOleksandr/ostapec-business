@@ -12,14 +12,17 @@ export const metadata: Metadata = {
 
 const BlogDetailsPage = () => {
   function generateIncrementingNumber() {
-    const startDate = new Date('2025-04-01T00:00:00Z');
-    const currentDate = new Date();
+    const startDate: Date = new Date('2025-03-30T00:00:00Z');
+    const currentDate: Date = new Date();
+    if (isNaN(startDate.getTime()) || isNaN(currentDate.getTime())) {
+      throw new Error('Invalid date format');
+    }
     if (currentDate < startDate) {
       return 0;
     }
-    const timeDifference = currentDate - startDate;
-    const hoursDifference = timeDifference / (1000 * 60 * 60);
-    const increments = Math.floor(hoursDifference / 3);
+    const timeDifference: number = currentDate.getTime() - startDate.getTime();
+    const hoursDifference: number = timeDifference / (1000 * 60 * 60);
+    const increments: number = Math.floor(hoursDifference / 2);
 
     return increments;
   }
