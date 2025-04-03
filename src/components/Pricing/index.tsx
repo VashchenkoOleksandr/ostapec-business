@@ -42,7 +42,10 @@ const Pricing = () => {
                         <OfferList text="Conversion Optimization Features" status="active"/>
                         <OfferList text="Email & Priority Support" status="active"/>
                         <OfferList text="Advanced SEO Tools" status="active"/>
-                        <OfferList text="Customizable Templates" status="inactive"/>
+                        <OfferList text="Customizable Templates" status="active"/>
+                        <OfferList text="A/B Testing & Performance Tracking" status="active"/>
+                        <OfferList text="Social Media Integration" status="active"/>
+                        <OfferList text="Social Media Automation" status="inactive"/>
                     </PricingBox>
                     <PricingBox
                         duration=""
@@ -56,6 +59,11 @@ const Pricing = () => {
                         <OfferList text="24/7 Dedicated Support" status="active"/>
                         <OfferList text="Scalability for Large Teams" status="active"/>
                         <OfferList text="Compliance and Data Protection" status="active"/>
+                        <OfferList text="Cloud Infrastructure Management" status="active"/>
+                        <OfferList text="Advanced API Integrations" status="active"/>
+                        <OfferList text="Social Media Automation" status="active"/>
+                        <OfferList text="Performance Optimization" status="active"/>
+                        <OfferList text="Priority Feature Development" status="active"/>
                     </PricingBox>
                 </div>
             </div>

@@ -22,18 +22,14 @@ const Contact = () => {
                                 here to help! Reach out to us, and let’s discuss how we can elevate your online
                                 presence.
                             </p>
-                            <ul className="mb-12 text-base font-medium text-body-color">
-                                <li className="mb-5 text-base font-medium text-body-color">
+                            <ul className="mb-12 text-base font-medium">
+                                <li className="mb-5 text-base font-medium text-black dark:text-white ">
                                     📍 Address: [Your Address Here]
                                 </li>
-                                <li className="mb-5 text-base font-medium text-body-color">
+                                <li className="mb-5 text-base font-medium text-black dark:text-white ">
                                     ✉️ Email: <a href="mailto:mail@mail.com">mail@mail.com</a>
                                 </li>
                             </ul>
-                            <p className="mb-12 text-base font-medium text-body-color">
-                                Or simply fill out the contact form below, and we’ll get back to you as soon as
-                                possible!
-                            </p>
                             <p className="mb-12 text-base font-medium text-body-color">
                                 We look forward to working with you and bringing your ideas to life.
                             </p>
