@@ -24,7 +24,7 @@ const Contact = () => {
                             </p>
                             <ul className="mb-12 text-base font-medium">
                                 <li className="mb-5 text-base font-medium text-black dark:text-white ">
-                                    📍 Address: Calgary
+                                    📍 Office address: Calgary
                                 </li>
                                 <li className="mb-5 text-base font-medium text-black dark:text-white ">
                                     ✉️ Email: <a href="mailto:info@ostapetswebltd.com">info@ostapetswebltd.com</a>
