@@ -24,10 +24,10 @@ const Contact = () => {
                             </p>
                             <ul className="mb-12 text-base font-medium">
                                 <li className="mb-5 text-base font-medium text-black dark:text-white ">
-                                    📍 Address: [Your Address Here]
+                                    📍 Address: Calgary
                                 </li>
                                 <li className="mb-5 text-base font-medium text-black dark:text-white ">
-                                    ✉️ Email: <a href="mailto:mail@mail.com">mail@mail.com</a>
+                                    ✉️ Email: <a href="mailto:info@ostapetswebltd.com">info@ostapetswebltd.com</a>
                                 </li>
                             </ul>
                             <p className="mb-12 text-base font-medium text-body-color">
