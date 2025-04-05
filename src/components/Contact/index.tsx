@@ -29,6 +29,9 @@ const Contact = () => {
                                 <li className="mb-5 text-base font-medium text-black dark:text-white ">
                                     ✉️ Support email: <a href="mailto:support@ostapetswebltd.com">support@ostapetswebltd.com</a>
                                 </li>
+                                <li className="mb-5 text-base font-medium text-black dark:text-white ">
+                                    ✉️ CTO email: <a href="mailto:cto@ostapetswebltd.com">cto@ostapetswebltd.com</a>
+                                </li>
                             </ul>
                             <p className="mb-12 text-base font-medium text-body-color">
                                 We look forward to working with you and bringing your ideas to life.
