@@ -1,16 +1,42 @@
-import SharePost from "@/components/Blog/SharePost";
-import TagButton from "@/components/Blog/TagButton";
-import Image from "next/image";
+"use client";
 
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Blog Details Page | Ostapets Web Services Ltd.",
-  description: "This is Blog Details Page for Ostapets Web Services Ltd.",
-  // other metadata
-};
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import blogData from "@/components/Blog/blogData";
 
 const BlogDetailsPage = () => {
+  function formatDate(year: string): string {
+    // Переводимо рядок в число, якщо рік коректний
+    const date = new Date(`${year}-01-01`); // Створюємо дату з 1 січня заданого року
+
+    // Перевірка на коректність дати
+    if (isNaN(date.getTime())) {
+      throw new Error('Invalid year format');
+    }
+
+    // Місяць у форматі "Jan"
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = date.getDate();
+    const month = monthNames[date.getMonth()];
+    const formattedDate = `${day < 10 ? '0' + day : day} ${month} ${year}`;
+
+    return formattedDate;
+  }
+
+  function generateLinks(strings: string[]): string {
+    return strings.map(item => {
+      return `
+      <a
+        href="#0"
+        class="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
+      >
+        ${item}
+      </a>
+    `;
+    }).join(''); // об'єднуємо всі теги в один рядок
+  }
+
+  // Функція для генерації чисел
   function generateIncrementingNumber() {
     const startDate: Date = new Date('2025-03-30T00:00:00Z');
     const currentDate: Date = new Date();
@@ -27,33 +53,105 @@ const BlogDetailsPage = () => {
     return increments;
   }
 
+  // Функція для додавання HTML-розмітки
+  function addHTMLMarkupToText(text: string) {
+    // Функція для додавання рандомних заголовків
+    function addRandomHeading(text: string) {
+      const headings = ['<h2>', '<h3>', '<h4>'];
+      const heading = headings[Math.floor(Math.random() * headings.length)];
+      const randomIndex = Math.floor(Math.random() * text.length);
+      return text.substring(0, randomIndex) + `${heading} ${text.substring(randomIndex)}</${heading.slice(1)}`;
+    }
+
+    // Функція для додавання параграфів
+    function createParagraphs(text: string) {
+      // Розбиваємо текст на абзаци після кожної крапки.
+      const paragraphs = text.split('.').map((sentence) => `<p>${sentence.trim()}</p>`);
+      return paragraphs.join(' ');
+    }
+
+    // Функція для створення списків
+    function createList(text: string) {
+      const sentences = text.split('.').map((sentence) => sentence.trim()).filter((sentence) => sentence.length > 0);
+
+      // Якщо в тексті достатньо пунктів для списку
+      if (sentences.length > 3) {
+        const listItems = sentences.map((sentence) => `<li>${sentence}</li>`).join('');
+        return `<ul>${listItems}</ul>`;
+      }
+
+      return text;
+    }
+
+    text = createParagraphs(text); // Розбиваємо на параграфи
+    text = createList(text); // Додаємо список, якщо є кілька пунктів
+    text = addRandomHeading(text); // Додаємо заголовок на випадкову позицію
+
+    return text;
+  }
+
+  const searchParams = useSearchParams();
+  const title = searchParams.get("title");
+  const [content, setContent] = useState(""); // Стейт для контенту
+  const [blogPost, setBlogPost] = useState({
+    author: {
+      designation: "Frontend Developer",
+      image: "/images/blog/author-02.png",
+      name : "Cynthia Haley",
+    },
+    publishDate: '2025',
+    tags: ['Design', 'Info'],
+    image: 'https://picsum.photos/seed/5235/800/600'
+  }); // Стейт для контенту
+
+  useEffect(() => {
+    if (title) {
+      setContent("");
+
+      fetch(`/api/generate-content?title=${encodeURIComponent(title)}`)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error("Failed to fetch content");
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setContent(data.content);
+          });
+
+      const data = blogData.find((post) => post.title === title);
+      setBlogPost(data);
+    }
+  }, [title]);
+
+
   return (
-    <>
-      <section className="pb-[120px] pt-[150px]">
-        <div className="container">
-          <div className="-mx-4 flex flex-wrap justify-center">
-            <div className="w-full px-4 lg:w-8/12">
-              <div>
-                <h2 className="mb-8 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight">
-                  The Importance of SEO for Your Business Growth
-                </h2>
-                <div className="mb-10 flex flex-wrap items-center justify-between border-b border-body-color border-opacity-10 pb-4 dark:border-white dark:border-opacity-10">
-                  <div className="flex flex-wrap items-center">
-                    <div className="mb-5 mr-10 flex items-center">
-                      <div className="w-full">
-                        <span className="mb-1 text-base font-medium text-body-color">
-                          By <span>John Miller</span>
-                        </span>
+      <>
+        <section className="pb-[120px] pt-[150px]">
+          <div className="container">
+            <div className="-mx-4 flex flex-wrap justify-center">
+              <div className="w-full px-4 lg:w-8/12">
+                <div>
+                  <h2 className="mb-8 text-3xl font-bold leading-tight text-black dark:text-white sm:text-4xl sm:leading-tight">
+                    {title}
+                  </h2>
+                  <div className="mb-10 flex flex-wrap items-center justify-between border-b border-body-color border-opacity-10 pb-4 dark:border-white dark:border-opacity-10">
+                    <div className="flex flex-wrap items-center">
+                      <div className="mb-5 mr-10 flex items-center">
+                        <div className="w-full">
+                          <span className="mb-1 text-base font-medium text-body-color">
+                            By <span>{blogPost?.author?.name}</span>
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="mb-5 flex items-center">
-                      <p className="mr-5 flex items-center text-base font-medium text-body-color">
+                      <div className="mb-5 flex items-center">
+                        <p className="mr-5 flex items-center text-base font-medium text-body-color">
                         <span className="mr-3">
                           <svg
-                            width="15"
-                            height="15"
-                            viewBox="0 0 15 15"
-                            className="fill-current"
+                              width="15"
+                              height="15"
+                              viewBox="0 0 15 15"
+                              className="fill-current"
                           >
                             <path d="M3.89531 8.67529H3.10666C2.96327 8.67529 2.86768 8.77089 2.86768 8.91428V9.67904C2.86768 9.82243 2.96327 9.91802 3.10666 9.91802H3.89531C4.03871 9.91802 4.1343 9.82243 4.1343 9.67904V8.91428C4.1343 8.77089 4.03871 8.67529 3.89531 8.67529Z" />
                             <path d="M6.429 8.67529H5.64035C5.49696 8.67529 5.40137 8.77089 5.40137 8.91428V9.67904C5.40137 9.82243 5.49696 9.91802 5.64035 9.91802H6.429C6.57239 9.91802 6.66799 9.82243 6.66799 9.67904V8.91428C6.66799 8.77089 6.5485 8.67529 6.429 8.67529Z" />
@@ -66,325 +164,97 @@ const BlogDetailsPage = () => {
                             <path d="M13.2637 3.3697H7.64754V2.58105C8.19721 2.43765 8.62738 1.91189 8.62738 1.31442C8.62738 0.597464 8.02992 0 7.28906 0C6.54821 0 5.95074 0.597464 5.95074 1.31442C5.95074 1.91189 6.35702 2.41376 6.93058 2.58105V3.3697H1.31442C0.597464 3.3697 0 3.96716 0 4.68412V13.2637C0 13.9807 0.597464 14.5781 1.31442 14.5781H13.2637C13.9807 14.5781 14.5781 13.9807 14.5781 13.2637V4.68412C14.5781 3.96716 13.9807 3.3697 13.2637 3.3697ZM6.6677 1.31442C6.6677 0.979841 6.93058 0.716957 7.28906 0.716957C7.62364 0.716957 7.91042 0.979841 7.91042 1.31442C7.91042 1.649 7.64754 1.91189 7.28906 1.91189C6.95448 1.91189 6.6677 1.6251 6.6677 1.31442ZM1.31442 4.08665H13.2637C13.5983 4.08665 13.8612 4.34954 13.8612 4.68412V6.45261H0.716957V4.68412C0.716957 4.34954 0.979841 4.08665 1.31442 4.08665ZM13.2637 13.8612H1.31442C0.979841 13.8612 0.716957 13.5983 0.716957 13.2637V7.16957H13.8612V13.2637C13.8612 13.5983 13.5983 13.8612 13.2637 13.8612Z" />
                           </svg>
                         </span>
-                        12 Jan 2025
-                      </p>
-                      <p className="mr-5 flex items-center text-base font-medium text-body-color">
+                          {formatDate(blogPost.publishDate)}
+                        </p>
+                        <p className="mr-5 flex items-center text-base font-medium text-body-color">
                         <span className="mr-3">
                           <svg
-                            width="18"
-                            height="13"
-                            viewBox="0 0 18 13"
-                            className="fill-current"
+                              width="18"
+                              height="13"
+                              viewBox="0 0 18 13"
+                              className="fill-current"
                           >
                             <path d="M15.6375 0H1.6875C0.759375 0 0 0.759375 0 1.6875V10.6875C0 11.3062 0.309375 11.8406 0.84375 12.15C1.09687 12.2906 1.40625 12.375 1.6875 12.375C1.96875 12.375 2.25 12.2906 2.53125 12.15L5.00625 10.7156C5.11875 10.6594 5.23125 10.6312 5.34375 10.6312H15.6094C16.5375 10.6312 17.2969 9.87187 17.2969 8.94375V1.6875C17.325 0.759375 16.5656 0 15.6375 0ZM16.3406 8.94375C16.3406 9.3375 16.0312 9.64687 15.6375 9.64687H5.37187C5.09062 9.64687 4.78125 9.73125 4.52812 9.87187L2.05313 11.3063C1.82812 11.4187 1.575 11.4187 1.35 11.3063C1.125 11.1938 1.0125 10.9688 1.0125 10.7156V1.6875C1.0125 1.29375 1.32188 0.984375 1.71563 0.984375H15.6656C16.0594 0.984375 16.3687 1.29375 16.3687 1.6875V8.94375H16.3406Z" />
                             <path d="M12.2342 3.375H4.69668C4.41543 3.375 4.19043 3.6 4.19043 3.88125C4.19043 4.1625 4.41543 4.3875 4.69668 4.3875H12.2623C12.5435 4.3875 12.7685 4.1625 12.7685 3.88125C12.7685 3.6 12.5154 3.375 12.2342 3.375Z" />
                             <path d="M11.0529 6.55322H4.69668C4.41543 6.55322 4.19043 6.77822 4.19043 7.05947C4.19043 7.34072 4.41543 7.56572 4.69668 7.56572H11.0811C11.3623 7.56572 11.5873 7.34072 11.5873 7.05947C11.5873 6.77822 11.3342 6.55322 11.0529 6.55322Z" />
                           </svg>
                         </span>
-                        50
-                      </p>
-                      <p className="flex items-center text-base font-medium text-body-color">
+                          50
+                        </p>
+                        <p className="flex items-center text-base font-medium text-body-color">
                         <span className="mr-3">
                           <svg
-                            width="20"
-                            height="12"
-                            viewBox="0 0 20 12"
-                            className="fill-current"
+                              width="20"
+                              height="12"
+                              viewBox="0 0 20 12"
+                              className="fill-current"
                           >
                             <path d="M10.2559 3.8125C9.03711 3.8125 8.06836 4.8125 8.06836 6C8.06836 7.1875 9.06836 8.1875 10.2559 8.1875C11.4434 8.1875 12.4434 7.1875 12.4434 6C12.4434 4.8125 11.4746 3.8125 10.2559 3.8125ZM10.2559 7.09375C9.66211 7.09375 9.16211 6.59375 9.16211 6C9.16211 5.40625 9.66211 4.90625 10.2559 4.90625C10.8496 4.90625 11.3496 5.40625 11.3496 6C11.3496 6.59375 10.8496 7.09375 10.2559 7.09375Z" />
                             <path d="M19.7559 5.625C17.6934 2.375 14.1309 0.4375 10.2559 0.4375C6.38086 0.4375 2.81836 2.375 0.755859 5.625C0.630859 5.84375 0.630859 6.125 0.755859 6.34375C2.81836 9.59375 6.38086 11.5312 10.2559 11.5312C14.1309 11.5312 17.6934 9.59375 19.7559 6.34375C19.9121 6.125 19.9121 5.84375 19.7559 5.625ZM10.2559 10.4375C6.84961 10.4375 3.69336 8.78125 1.81836 5.96875C3.69336 3.1875 6.84961 1.53125 10.2559 1.53125C13.6621 1.53125 16.8184 3.1875 18.6934 5.96875C16.8184 8.78125 13.6621 10.4375 10.2559 10.4375Z" />
                           </svg>
                         </span>
-                        {generateIncrementingNumber()}
-                      </p>
+                          {generateIncrementingNumber()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mb-5 flex gap-3">
+                        <div
+                            dangerouslySetInnerHTML={{
+                              __html: blogPost?.tags ? generateLinks(blogPost.tags) : '',
+                            }}
+                        />
                     </div>
                   </div>
-                  <div className="mb-5 flex gap-3">
-                    <a
-                      href="#0"
-                      className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
-                    >
-                      Design
-                    </a>
-                    <a
-                      href="#0"
-                      className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
-                    >
-                      Development
-                    </a>
-                    <a
-                      href="#0"
-                      className="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
-                    >
-                      Info
-                    </a>
-                  </div>
-                </div>
-                <div>
-                  <p className="mb-10 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    In the digital age, where competition is fierce, having an online presence is no longer optional—it’s a necessity. One of the most effective ways to ensure your business stands out is through Search Engine Optimization (SEO). SEO helps improve your website’s visibility on search engines like Google, ultimately driving more traffic, leads, and conversions. But why is SEO so important for your business? Let’s break it down.
-                  </p>
-                  <div className="mb-10 w-full overflow-hidden rounded">
-                    <div className="relative aspect-[97/60] w-full sm:aspect-[97/44]">
-                      <Image
-                        src="/images/blog/blog-details-02.jpg"
-                        alt="image"
-                        fill
-                        className="object-cover object-center"
+                  <div>
+                    <div className="mb-10 w-full overflow-hidden rounded">
+                      <div className="relative aspect-[97/60] w-full sm:aspect-[97/44]">
+                        <img
+                            src={blogPost?.image}
+                            alt="image"
+                            className="object-cover object-center"
+                        />
+                      </div>
+                    </div>
+                    {content ?
+                      <div
+                          dangerouslySetInnerHTML={{
+                            __html: content ?
+                                addHTMLMarkupToText(content) : ''
+                          }}
                       />
-                    </div>
-                  </div>
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    1. Increased Website Traffic
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    When potential customers search for products or services online, they rarely go past the first page of Google. By optimizing your website for relevant keywords, you increase your chances of ranking higher in search results, leading to more organic traffic without relying solely on paid ads.
-                  </p>
-
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    2. Cost-Effective Marketing
-                    </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                  Unlike paid advertising, where you need to continuously invest money to get results, SEO provides long-term benefits. Once your website ranks well, you can attract traffic without ongoing ad spend, making it a cost-effective marketing strategy for businesses of all sizes.
-                  </p>
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    3. Builds Credibility and Trust
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    A website that ranks high in search results is often perceived as more trustworthy and credible. Google considers factors like high-quality content, user experience, and backlinks when determining rankings. By investing in SEO, you enhance your brand’s reputation and establish authority in your industry.
-                  </p>
-
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    4. Better User Experience
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    SEO isn’t just about search engines—it’s also about users. A well-optimized website is faster, mobile-friendly, and easy to navigate. Google rewards websites that provide a seamless user experience, which in turn leads to higher engagement and lower bounce rates.
-                  </p>
-
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    5. Competitive Advantage
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    If your competitors are investing in SEO and you’re not, you’re already at a disadvantage. A strong SEO strategy helps you stay ahead of the competition by ensuring your business appears when potential customers are searching for solutions you offer.
-                  </p>
-
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    6. Local SEO for More Foot Traffic
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    For businesses with a physical location, local SEO is crucial. Optimizing for location-based searches (e.g., “best marketing agency near me”) helps attract local customers and boosts store visits and sales.
-                  </p>
-
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    7. Measurable Results and Insights
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    With tools like Google Analytics, SEO efforts can be tracked and measured. You can see which keywords bring the most traffic, how users interact with your site, and adjust strategies accordingly for even better results.
-                  </p>
-
-                  <h3 className={"mb-2 text-2xl font-bold leading-tight text-black dark:text-white sm:leading-tight"}>
-                    Conclusion
-                  </h3>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    SEO is no longer an option—it’s a fundamental part of any successful digital marketing strategy. Whether you’re a startup or an established enterprise, investing in SEO will help your business gain visibility, attract customers, and stay competitive in an ever-evolving digital world.
-                  </p>
-                  <p className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    If you haven’t already started optimizing your website for search engines, now is the time to take action. The sooner you invest in SEO, the faster you’ll see long-term, sustainable growth for your business.
-                  </p>
-
-                  <h3 className="font-xl mb-10 font-bold leading-tight text-black dark:text-white sm:text-2xl sm:leading-tight lg:text-xl lg:leading-tight xl:text-2xl xl:leading-tight">
-                    Additional Insights and Recommendations
-                  </h3>
-                  <p className="mb-10 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    Implementing these strategies will help improve your website`&apos;`s visibility, enhance user experience, and drive long-term business growth.
-                  </p>
-                  <ul className="mb-10 list-inside list-disc text-body-color">
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Digital marketplace for UI/UX designers.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Consectetur adipiscing elit in voluptate velit.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Mattis vulputate cupidatat.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Vulputate enim nulla aliquet porttitor odio pellentesque.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Ligula ullamcorper malesuada proin.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Consistent content updates improve rankings over time.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Mobile optimization is crucial for better user engagement.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">High-quality backlinks enhance domain authority.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">SEO is a long-term investment, not a quick fix.</li>
-                    <li className="mb-2 text-base font-medium text-body-color sm:text-lg lg:text-base xl:text-lg">Regular performance tracking helps refine strategies.</li>
-                  </ul>
-                  <div className="relative z-10 mb-10 overflow-hidden rounded-md bg-primary bg-opacity-10 p-8 md:p-9 lg:p-8 xl:p-9">
-                    <p className="text-center text-base font-medium italic text-body-color">
-                      Investing in SEO is essential for improving visibility, building trust, and staying competitive in the digital landscape. By optimizing content, enhancing user experience, and leveraging data-driven insights, businesses can achieve sustainable growth and long-term success.
-                    </p>
-                    <span className="absolute left-0 top-0 z-[-1]">
-                      <svg
-                        width="132"
-                        height="109"
-                        viewBox="0 0 132 109"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          opacity="0.5"
-                          d="M33.0354 90.11C19.9851 102.723 -3.75916 101.834 -14 99.8125V-15H132C131.456 -12.4396 127.759 -2.95278 117.318 14.5117C104.268 36.3422 78.7114 31.8952 63.2141 41.1934C47.7169 50.4916 49.3482 74.3435 33.0354 90.11Z"
-                          fill="url(#paint0_linear_111:606)"
-                        />
-                        <path
-                          opacity="0.5"
-                          d="M33.3654 85.0768C24.1476 98.7862 1.19876 106.079 -9.12343 108.011L-38.876 22.9988L100.816 -25.8905C100.959 -23.8126 99.8798 -15.5499 94.4164 0.87754C87.5871 21.4119 61.9822 26.677 49.5641 38.7512C37.146 50.8253 44.8877 67.9401 33.3654 85.0768Z"
-                          fill="url(#paint1_linear_111:606)"
-                        />
-                        <defs>
-                          <linearGradient
-                            id="paint0_linear_111:606"
-                            x1="94.7523"
-                            y1="82.0246"
-                            x2="8.40951"
-                            y2="52.0609"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="white" stopOpacity="0.06" />
-                            <stop
-                              offset="1"
-                              stopColor="white"
-                              stopOpacity="0"
-                            />
-                          </linearGradient>
-                          <linearGradient
-                            id="paint1_linear_111:606"
-                            x1="90.3206"
-                            y1="58.4236"
-                            x2="1.16149"
-                            y2="50.8365"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="white" stopOpacity="0.06" />
-                            <stop
-                              offset="1"
-                              stopColor="white"
-                              stopOpacity="0"
-                            />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    </span>
-                    <span className="absolute bottom-0 right-0 z-[-1]">
-                      <svg
-                        width="53"
-                        height="30"
-                        viewBox="0 0 53 30"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <circle
-                          opacity="0.8"
-                          cx="37.5"
-                          cy="37.5"
-                          r="37.5"
-                          fill="#4A6CF7"
-                        />
-                        <mask
-                          id="mask0_111:596"
-                          style={{ maskType: "alpha" }}
-                          maskUnits="userSpaceOnUse"
-                          x="0"
-                          y="0"
-                          width="75"
-                          height="75"
-                        >
-                          <circle
-                            opacity="0.8"
-                            cx="37.5"
-                            cy="37.5"
-                            r="37.5"
-                            fill="#4A6CF7"
-                          />
-                        </mask>
-                        <g mask="url(#mask0_111:596)">
-                          <circle
-                            opacity="0.8"
-                            cx="37.5"
-                            cy="37.5"
-                            r="37.5"
-                            fill="url(#paint0_radial_111:596)"
-                          />
-                          <g opacity="0.8" filter="url(#filter0_f_111:596)">
-                            <circle
-                              cx="40.8089"
-                              cy="19.853"
-                              r="15.4412"
-                              fill="white"
-                            />
-                          </g>
-                        </g>
-                        <defs>
-                          <filter
-                            id="filter0_f_111:596"
-                            x="4.36768"
-                            y="-16.5881"
-                            width="72.8823"
-                            height="72.8823"
-                            filterUnits="userSpaceOnUse"
-                            colorInterpolationFilters="sRGB"
-                          >
-                            <feFlood
-                              floodOpacity="0"
-                              result="BackgroundImageFix"
-                            />
-                            <feBlend
-                              mode="normal"
-                              in="SourceGraphic"
-                              in2="BackgroundImageFix"
-                              result="shape"
-                            />
-                            <feGaussianBlur
-                              stdDeviation="10.5"
-                              result="effect1_foregroundBlur_111:596"
-                            />
-                          </filter>
-                          <radialGradient
-                            id="paint0_radial_111:596"
-                            cx="0"
-                            cy="0"
-                            r="1"
-                            gradientUnits="userSpaceOnUse"
-                            gradientTransform="translate(37.5 37.5) rotate(90) scale(40.2574)"
-                          >
-                            <stop stopOpacity="0.47" />
-                            <stop offset="1" stopOpacity="0" />
-                          </radialGradient>
-                        </defs>
-                      </svg>
-                    </span>
-                  </div>
-                  <p className="mb-10 text-base font-medium leading-relaxed text-body-color sm:text-lg sm:leading-relaxed lg:text-base lg:leading-relaxed xl:text-lg xl:leading-relaxed">
-                    Start optimizing your website today with Ostapets Web Services Ltd and gain a competitive edge in your industry. Take action now and watch your business grow with the power of SEO.
-                  </p>
-                  <div className="items-center justify-between sm:flex">
-                    <div className="mb-5">
-                      <h4 className="mb-3 text-sm font-medium text-body-color">
-                        Popular Tags :
-                      </h4>
-                      <div className="flex items-center">
-                        <TagButton text="Design" />
-                        <TagButton text="Development" />
-                        <TagButton text="Info" />
-                      </div>
-                    </div>
-                    <div className="mb-5">
-                      <h5 className="mb-3 text-sm font-medium text-body-color sm:text-right">
-                        Share this post :
-                      </h5>
-                      <div className="flex items-center sm:justify-end">
-                        <SharePost />
-                      </div>
-                    </div>
+                      :
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                          <div
+                              style={{
+                                width: "64px", // 16 * 4px (Tailwind CSS значення)
+                                height: "64px",
+                                border: "8px solid #f3f3f3", // Світлий фон бордеру
+                                borderTop: "8px solid #3498db", // Синій для верхньої частини
+                                borderRadius: "50%", // Округлення
+                                animation: "spin 1s linear infinite", // Анімація обертання
+                              }}
+                          ></div>
+                          <style>
+                            {`
+                          @keyframes spin {
+                            0% {
+                              transform: rotate(0deg);
+                            }
+                            100% {
+                              transform: rotate(360deg);
+                            }
+                          }
+                        `}
+                          </style>
+                        </div>
+                    }
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </>
+        </section>
+      </>
   );
 };
 

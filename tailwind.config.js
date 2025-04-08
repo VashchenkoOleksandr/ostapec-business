@@ -34,6 +34,9 @@ module.exports = {
       // => @media (min-width: 1400px) { ... }
     },
     extend: {
+      animation: {
+        spin: 'spin 1s linear infinite',
+      },
       colors: {
         current: "currentColor",
         transparent: "transparent",

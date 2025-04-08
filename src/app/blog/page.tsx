@@ -24,14 +24,14 @@ const Blog = () => {
             {blogData.map((blog) => (
               <div
                 key={blog.id}
-                className="w-full px-4 md:w-2/3 lg:w-1/2 xl:w-1/3"
+                className="w-full p-2 md:w-2/3 lg:w-1/2 xl:w-1/3"
               >
                 <SingleBlog blog={blog} />
               </div>
             ))}
           </div>
 
-          <div className="-mx-4 flex flex-wrap" data-wow-delay=".15s">
+          <div className="-mx-4 flex flex-wrap hidden" data-wow-delay=".15s">
             <div className="w-full px-4">
               <ul className="flex items-center justify-center pt-8">
                 <li className="mx-1">
