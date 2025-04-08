@@ -92,7 +92,6 @@ function addHTMLMarkupToText(text: string) {
 const BlogDetailsPage = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
-  const [content, setContent] = useState(""); // Стейт для контенту
   const [blogPost, setBlogPost] = useState({
     author: {
       designation: "Frontend Developer",
@@ -101,24 +100,12 @@ const BlogDetailsPage = () => {
     },
     publishDate: '2025',
     tags: ['Design', 'Info'],
-    image: 'https://picsum.photos/seed/5235/800/600'
+    image: 'https://picsum.photos/seed/5235/800/600',
+    content:''
   }); // Стейт для контенту
 
   useEffect(() => {
     if (title) {
-      setContent("");
-
-      fetch(`/api/generate-content?title=${encodeURIComponent(title)}`)
-          .then((res) => {
-            if (!res.ok) {
-              throw new Error("Failed to fetch content");
-            }
-            return res.json();
-          })
-          .then((data) => {
-            setContent(data.content);
-          });
-
       const data = blogData.find((post) => post.title === title);
       setBlogPost(data);
     }
@@ -215,13 +202,12 @@ const BlogDetailsPage = () => {
                         />
                       </div>
                     </div>
-                    {content ?
-                      <div
-                          dangerouslySetInnerHTML={{
-                            __html: content ?
-                                addHTMLMarkupToText(content) : ''
-                          }}
-                      />
+                    {blogPost.content ?
+                        <div
+                            dangerouslySetInnerHTML={{
+                              __html: blogPost.content,
+                            }}
+                        />
                       :
                         <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                           <div
