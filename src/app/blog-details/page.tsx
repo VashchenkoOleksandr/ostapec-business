@@ -4,28 +4,27 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import blogData from "@/components/Blog/blogData";
 
-const BlogDetailsPage = () => {
-  function formatDate(year: string): string {
-    // Переводимо рядок в число, якщо рік коректний
-    const date = new Date(`${year}-01-01`); // Створюємо дату з 1 січня заданого року
+function formatDate(year: string): string {
+  // Переводимо рядок в число, якщо рік коректний
+  const date = new Date(`${year}-01-01`); // Створюємо дату з 1 січня заданого року
 
-    // Перевірка на коректність дати
-    if (isNaN(date.getTime())) {
-      throw new Error('Invalid year format');
-    }
-
-    // Місяць у форматі "Jan"
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const formattedDate = `${day < 10 ? '0' + day : day} ${month} ${year}`;
-
-    return formattedDate;
+  // Перевірка на коректність дати
+  if (isNaN(date.getTime())) {
+    throw new Error('Invalid year format');
   }
 
-  function generateLinks(strings: string[]): string {
-    return strings.map(item => {
-      return `
+  // Місяць у форматі "Jan"
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const day = date.getDate();
+  const month = monthNames[date.getMonth()];
+  const formattedDate = `${day < 10 ? '0' + day : day} ${month} ${year}`;
+
+  return formattedDate;
+}
+
+function generateLinks(strings: string[]): string {
+  return strings.map(item => {
+    return `
       <a
         href="#0"
         class="inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white"
@@ -33,63 +32,64 @@ const BlogDetailsPage = () => {
         ${item}
       </a>
     `;
-    }).join(''); // об'єднуємо всі теги в один рядок
+  }).join(''); // об'єднуємо всі теги в один рядок
+}
+
+// Функція для генерації чисел
+function generateIncrementingNumber() {
+  const startDate: Date = new Date('2025-03-30T00:00:00Z');
+  const currentDate: Date = new Date();
+  if (isNaN(startDate.getTime()) || isNaN(currentDate.getTime())) {
+    throw new Error('Invalid date format');
+  }
+  if (currentDate < startDate) {
+    return 0;
+  }
+  const timeDifference: number = currentDate.getTime() - startDate.getTime();
+  const hoursDifference: number = timeDifference / (1000 * 60 * 60);
+  const increments: number = Math.floor(hoursDifference / 2);
+
+  return increments;
+}
+
+// Функція для додавання HTML-розмітки
+function addHTMLMarkupToText(text: string) {
+  // Функція для додавання рандомних заголовків
+  function addRandomHeading(text: string) {
+    const headings = ['<h2>', '<h3>', '<h4>'];
+    const heading = headings[Math.floor(Math.random() * headings.length)];
+    const randomIndex = Math.floor(Math.random() * text.length);
+    return text.substring(0, randomIndex) + `${heading} ${text.substring(randomIndex)}</${heading.slice(1)}`;
   }
 
-  // Функція для генерації чисел
-  function generateIncrementingNumber() {
-    const startDate: Date = new Date('2025-03-30T00:00:00Z');
-    const currentDate: Date = new Date();
-    if (isNaN(startDate.getTime()) || isNaN(currentDate.getTime())) {
-      throw new Error('Invalid date format');
-    }
-    if (currentDate < startDate) {
-      return 0;
-    }
-    const timeDifference: number = currentDate.getTime() - startDate.getTime();
-    const hoursDifference: number = timeDifference / (1000 * 60 * 60);
-    const increments: number = Math.floor(hoursDifference / 2);
-
-    return increments;
+  // Функція для додавання параграфів
+  function createParagraphs(text: string) {
+    // Розбиваємо текст на абзаци після кожної крапки.
+    const paragraphs = text.split('.').map((sentence) => `<p>${sentence.trim()}</p>`);
+    return paragraphs.join(' ');
   }
 
-  // Функція для додавання HTML-розмітки
-  function addHTMLMarkupToText(text: string) {
-    // Функція для додавання рандомних заголовків
-    function addRandomHeading(text: string) {
-      const headings = ['<h2>', '<h3>', '<h4>'];
-      const heading = headings[Math.floor(Math.random() * headings.length)];
-      const randomIndex = Math.floor(Math.random() * text.length);
-      return text.substring(0, randomIndex) + `${heading} ${text.substring(randomIndex)}</${heading.slice(1)}`;
+  // Функція для створення списків
+  function createList(text: string) {
+    const sentences = text.split('.').map((sentence) => sentence.trim()).filter((sentence) => sentence.length > 0);
+
+    // Якщо в тексті достатньо пунктів для списку
+    if (sentences.length > 3) {
+      const listItems = sentences.map((sentence) => `<li>${sentence}</li>`).join('');
+      return `<ul>${listItems}</ul>`;
     }
-
-    // Функція для додавання параграфів
-    function createParagraphs(text: string) {
-      // Розбиваємо текст на абзаци після кожної крапки.
-      const paragraphs = text.split('.').map((sentence) => `<p>${sentence.trim()}</p>`);
-      return paragraphs.join(' ');
-    }
-
-    // Функція для створення списків
-    function createList(text: string) {
-      const sentences = text.split('.').map((sentence) => sentence.trim()).filter((sentence) => sentence.length > 0);
-
-      // Якщо в тексті достатньо пунктів для списку
-      if (sentences.length > 3) {
-        const listItems = sentences.map((sentence) => `<li>${sentence}</li>`).join('');
-        return `<ul>${listItems}</ul>`;
-      }
-
-      return text;
-    }
-
-    text = createParagraphs(text); // Розбиваємо на параграфи
-    text = createList(text); // Додаємо список, якщо є кілька пунктів
-    text = addRandomHeading(text); // Додаємо заголовок на випадкову позицію
 
     return text;
   }
 
+  text = createParagraphs(text); // Розбиваємо на параграфи
+  text = createList(text); // Додаємо список, якщо є кілька пунктів
+  text = addRandomHeading(text); // Додаємо заголовок на випадкову позицію
+
+  return text;
+}
+
+const BlogDetailsPage = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
   const [content, setContent] = useState(""); // Стейт для контенту
@@ -126,31 +126,7 @@ const BlogDetailsPage = () => {
 
 
   return (
-      <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <div
-            style={{
-              width: "64px", // 16 * 4px (Tailwind CSS значення)
-              height: "64px",
-              border: "8px solid #f3f3f3", // Світлий фон бордеру
-              borderTop: "8px solid #3498db", // Синій для верхньої частини
-              borderRadius: "50%", // Округлення
-              animation: "spin 1s linear infinite", // Анімація обертання
-            }}
-        ></div>
-        <style>
-          {`
-                          @keyframes spin {
-                            0% {
-                              transform: rotate(0deg);
-                            }
-                            100% {
-                              transform: rotate(360deg);
-                            }
-                          }
-                        `}
-        </style>
-      </div>
-      }>
+      <>
         <section className="pb-[120px] pt-[150px]">
           <div className="container">
             <div className="-mx-4 flex flex-wrap justify-center">
@@ -278,8 +254,16 @@ const BlogDetailsPage = () => {
             </div>
           </div>
         </section>
+      </>
+  );
+};
+
+const BlogDetailsPageWithSuspense = () => {
+  return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <BlogDetailsPage />
       </Suspense>
   );
 };
 
-export default BlogDetailsPage;
+export default BlogDetailsPageWithSuspense;
