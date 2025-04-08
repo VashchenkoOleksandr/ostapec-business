@@ -92,7 +92,17 @@ function addHTMLMarkupToText(text: string) {
 const BlogDetailsPage = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get("title");
-  const [blogPost, setBlogPost] = useState({
+  const [blogPost, setBlogPost] = useState<{
+    author: {
+      designation: string;
+      image: string;
+      name: string;
+    };
+    publishDate: string;
+    tags: string[];
+    image: string;
+    content?: string;
+  }>({
     author: {
       designation: "Frontend Developer",
       image: "/images/blog/author-02.png",
@@ -101,8 +111,7 @@ const BlogDetailsPage = () => {
     publishDate: '2025',
     tags: ['Design', 'Info'],
     image: 'https://picsum.photos/seed/5235/800/600',
-    content:''
-  }); // Стейт для контенту
+  });
 
   useEffect(() => {
     if (title) {
