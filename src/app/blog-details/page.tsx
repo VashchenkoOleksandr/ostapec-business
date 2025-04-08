@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import blogData from "@/components/Blog/blogData";
 
@@ -126,7 +126,31 @@ const BlogDetailsPage = () => {
 
 
   return (
-      <>
+      <Suspense fallback={<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <div
+            style={{
+              width: "64px", // 16 * 4px (Tailwind CSS значення)
+              height: "64px",
+              border: "8px solid #f3f3f3", // Світлий фон бордеру
+              borderTop: "8px solid #3498db", // Синій для верхньої частини
+              borderRadius: "50%", // Округлення
+              animation: "spin 1s linear infinite", // Анімація обертання
+            }}
+        ></div>
+        <style>
+          {`
+                          @keyframes spin {
+                            0% {
+                              transform: rotate(0deg);
+                            }
+                            100% {
+                              transform: rotate(360deg);
+                            }
+                          }
+                        `}
+        </style>
+      </div>
+      }>
         <section className="pb-[120px] pt-[150px]">
           <div className="container">
             <div className="-mx-4 flex flex-wrap justify-center">
@@ -254,7 +278,7 @@ const BlogDetailsPage = () => {
             </div>
           </div>
         </section>
-      </>
+      </Suspense>
   );
 };
 
