@@ -116,7 +116,11 @@ const BlogDetailsPage = () => {
   useEffect(() => {
     if (title) {
       const data = blogData.find((post) => post.title === title);
-      setBlogPost(data);
+      if (data) {
+        // Ensure 'content' is always set, even if missing in 'data'
+        const updatedData = { ...data, content: data.content || '' };
+        setBlogPost(updatedData);
+      }
     }
   }, [title]);
 
