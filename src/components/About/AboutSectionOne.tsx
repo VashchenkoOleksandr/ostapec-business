@@ -1,5 +1,7 @@
 import Image from "next/image";
 import SectionTitle from "../Common/SectionTitle";
+import teamData from "@/components/About/teamData";
+import SingleTeam from "@/components/About/SingleTeam";
 
 const checkIcon = (
   <svg width="16" height="13" viewBox="0 0 16 13" className="fill-current">
@@ -63,6 +65,28 @@ const AboutSectionOne = () => {
                   fill
                   className="mx-auto hidden max-w-full drop-shadow-three dark:block dark:drop-shadow-none lg:mr-0"
                 />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="pt-16 md:pt-20 lg:pt-28">
+        <div className="container">
+          <div className="border-b border-body-color/[.15] pb-16 dark:border-white/[.15] md:pb-20 lg:pb-28">
+            <div className="-mx-4 flex flex-wrap items-center">
+              <div className="w-full px-4 lg:w-1/2">
+                <SectionTitle
+                    title="Our Core Team"
+                    paragraph="Our team is the heart of everything we do. We are a diverse group of passionate professionals — strategists, designers, developers, and marketers — united by a shared commitment to excellence. With a collaborative mindset and deep expertise in our fields, we work side by side to turn ideas into impactful solutions. Every member of our team brings unique skills and perspectives that help us push boundaries, innovate fearlessly, and deliver real results for our clients."
+                    mb="44px"
+                />
+              </div>
+              <div className="container">
+                <div className="w-full grid grid-cols-1 gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+                  {teamData.map((feature) => (
+                      <SingleTeam key={feature.id} feature={feature} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
