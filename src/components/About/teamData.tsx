@@ -50,7 +50,7 @@ const teamData: Team[] = [
     paragraph: "Operations Manager",
   },
   {
-    id: 7,
+    id: 8,
     icon: "/images/team/Andrii.png",
     title: "Andrew",
     paragraph: "Head of QA",
